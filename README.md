@@ -10,7 +10,6 @@ optional args:
 --workers   how many workers to dispatch (max is 1000)
 --wait      how long to wait in ms before we fail the port (default is 90)
 --range     range of ports to scan (42-6666)
---end-port  last port to scan (if set to 42000, will scan 1 to 42000)
 
 examples: (on windows command is pscan.exe)
 
