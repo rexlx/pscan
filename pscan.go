@@ -32,6 +32,7 @@ var help_msg string = `
 usage: pscan ADDR [ARGS]
 
 optional args:
+--help      show this help msg and exit
 --workers   how many workers to dispatch (max is 1000)
 --wait      how long to wait in ms before we fail the port (default is 90)
 --range     range of ports to scan (42-6666)
@@ -65,8 +66,11 @@ func parse_args() Args {
 	// iter over the args and store them. if an arg doesnt start with
 	// "--", skip it.
 	for i, a := range os.Args[1:] {
-		if !strings.HasPrefix(a, "--") {
+		if !strings.HasPrefix(a, "-") {
 			continue
+		} else if a == "--help" {
+			fmt.Println(help_msg)
+			os.Exit(0)
 		} else if a == "--workers" {
 			workers, err = strconv.Atoi(os.Args[i+2])
 			if err != nil {
@@ -102,6 +106,7 @@ func parse_args() Args {
 			_range_ = []int{start_int, end_int}
 		} else {
 			fmt.Printf("received an unexpected arg: %v\n%s\n...exiting", a, help_msg)
+			os.Exit(1)
 		}
 	}
 	// store it
