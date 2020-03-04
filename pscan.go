@@ -25,6 +25,7 @@ var (
 	wait       int
 	_range_    []int
 	err        error
+	report     bool
 )
 
 // the help msg for usage
@@ -36,6 +37,7 @@ optional args:
 --workers   how many workers to dispatch (max is 1000)
 --wait      how long to wait in ms before we fail the port (default is 90)
 --range     range of ports to scan (42-6666)
+--report    only display open ports separated by whitespace or none
 
 examples: (on windows command is pscan.exe)
 
@@ -55,6 +57,7 @@ func parse_args() Args {
 	// set default args
 	workers = 250
 	wait = 90
+	report = false
 	_range_ = []int{1, 65535}
 	// if the total args is ess than the minimum, esit
 	if len(os.Args) < 2 {
@@ -71,6 +74,8 @@ func parse_args() Args {
 		} else if a == "--help" {
 			fmt.Println(help_msg)
 			os.Exit(0)
+		} else if a == "--report" {
+			report = true
 		} else if a == "--workers" {
 			workers, err = strconv.Atoi(os.Args[i+2])
 			if err != nil {
@@ -175,8 +180,21 @@ func main() {
 	close(ports)
 	close(results)
 	fmt.Println()
-	for _, port := range open_ports {
-		fmt.Printf("%d is open\n", port)
+	if len(open_ports) > 0 {
+		if report {
+			for _, port := range open_ports {
+				fmt.Printf("%d ", port)
+			}
+			os.Exit(0)
+		}
+		for _, port := range open_ports {
+			fmt.Printf("%d is open\n", port)
+		}
+	} else {
+		if report {
+			os.Exit(1)
+		}
+		fmt.Println("couldnt find any open ports...")
 	}
 	fin := time.Now().Unix()
 	fmt.Printf("took %v seconds\n", fin-start)
