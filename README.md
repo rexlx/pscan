@@ -1,7 +1,7 @@
 # pscan
 scan a target machine for all open ports with go
 <br>
-works on windows or linux (not tested on mac)
+works on windows or linux (not tested on mac). I learned how to do this from reading https://nostarch.com/blackhatgo
 
 ```bash
 usage: pscan ADDR [ARGS]
